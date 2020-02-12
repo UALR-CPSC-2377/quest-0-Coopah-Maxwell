@@ -20,9 +20,9 @@ bool isGameSuccessful (string currentGuess);
 void printNumberOfTries ();
 
 const int numCountries = 30;
-int padding = 3; // number of spaces on each side of the word
+int padding = 3; 
 
-// These variables are important to keep in mind
+
 const int maxNumberGuesses = 4;
 int currentGuessNumber = 0;
 string currentGuessString = "";
@@ -66,8 +66,6 @@ int main () {
 
     correctCountry = countries[chooseRandomCountry()];
 
-    // this will initialize the currentGuess String to
-    // be the same length as the chosen county but contain only asterisks
 	currentGuessString = std::string(correctCountry.length(), '*');
 
     while (isGameDone(currentGuessString) == false) {
@@ -75,7 +73,7 @@ int main () {
         printNumberOfTries();
         char userGuess = processUserInput();
         fillLetters(userGuess, correctCountry);
-
+		
         clearConsole();
     }
 
@@ -83,59 +81,132 @@ int main () {
 }
 
 bool isGameDone (string currentGuess) {
-    /*  This function determines if the game is over */
-
-    return true; // placeholder
+	
+	//If the number of guess is greater than the max number of guesses
+	//or if the current guesses all together are correct, then the game
+	//is done...
+	if (currentGuessNumber >= maxNumberGuesses || currentGuessString == correctCountry) {
+		return true;
+	}
+	//...otherwise, the game isn't done
+	else {
+		return false;
+	}
+	
 }
 
 bool isGameSuccessful (string currentGuess) {
-    /*  This function determines if a player succesfully
-        guessed all of the characters
-    */
-
-    return false; // placeholder
+	
+	//If all of the user's guesses together are correct, then the user
+	//won the game...
+	if (currentGuessString == correctCountry) {
+		return true;
+	}
+	//...otherwise, the user didn't win the game
+	else {
+		return false;
+	}
+    
 }
 
 void printGameOver (string currentGuess) {
-    /*
-        This function will print out the game board with a message at the bottom
-        "CONGRATS" if the the player was successful and "YOU FAILED" if they werent.
-    */
+   
+	//If the function "isGameSuccessful" is true, then the program says
+	//"CONGRATS"...
+	if (isGameSuccessful(currentGuess) == true) {
+		std::cout << "CONGRATS" << endl;
+	}
+	//...otherwise the program says "YOU FAILED"
+	else {
+		std::cout << "YOU FAILED" << endl;
+	}
+	
 }
 
 void printGameBoard (string guess) {
-    /*
-        This function will print out a rectangle to contain the
-        current guess and the line
+    
+	//First Line
+	std::cout << "+";
+	for (int i = 0; i < (guess.length()+ (2 * padding)) - 2; i++) {
+		std::cout << "-";
+	}
+	std::cout << "+";
+	std::cout << endl;
+	
+	//Second Line
+	std::cout << "|";
+	for (int i = 0; i < padding - 1; i++) {
+		std::cout << " ";
+	}
+	std::cout << currentGuessString;
+	for (int i = 0; i < padding - 1; i++) {
+		std::cout << " ";
+	}
+	std::cout << "|";
+	std::cout << endl;
 
-        The width of the box is the length of the guess string + 2*padding.
-        The padding defines the number of spaces on either side of the underline
-    */
+	//Third Line
+	std::cout << "|";
+	for (int i = 0; i < padding - 1; i++) {
+		std::cout << " ";
+	}
+	for (int i = 0; i < guess.length(); i++) {
+		std::cout << "_";
+	}
+	for (int i = 0; i < padding - 1; i++) {
+		std::cout << " ";
+	}
+	std::cout << "|";
+	std::cout << endl;
+
+	//Fourth Line
+	std::cout << "+";
+	for (int i = 0; i < (guess.length() + (2 * padding)) - 2; i++) {
+		std::cout << "-";
+	}
+	std::cout << "+";
+	std::cout << endl;
+
 }
 
 void printNumberOfTries () {
-    /* this function will print out the number of tries that the user has attempted
-        as well as a message
-    */
+	
+	//Prints out the number of tries, starting at zero
+	std::cout << "NUMBER OF TRIES: " << currentGuessNumber << endl;
+	
 }
 
 char processUserInput () {
-    /*
-        This function will print out a message for the user to enter a character
-        The character will then be returned,
-    */
+    
+	//Prints out, "Enter a Guess!: " and takes the guess from the user,
+	//returns the value of the user's guess
+	char userGuess;
+	std::cout << "Enter a Guess!: ";
+	cin >> userGuess;
+	return userGuess;
 
-    return 'n'; // placeholder
 }
 
 void fillLetters (char guessChar, string secretWord) {
-    /*
-        This function will modify the global variable currentGuessString.
-        If any characters in the secretWord match with the guessChar, those
-        characters in currentGuessString need to be changed.
-    */
-}
+	
+	//The for loop checks to see if what the user inputed is correct, if it
+	//isn't correct, then it adds one to "currentGuessNumber" and if it is
+	//correct, then it replaces the *'s in currentGuessString with the char
+	//the user inputed, and it doesn't add one to "currentGuessNumber"
+		bool letterNotFound = true;
+		for (int i = 0; i < secretWord.length(); i++) {
 
+			if (secretWord[i] == guessChar && currentGuessString[i] != guessChar) {
+				currentGuessString[i] = guessChar;
+				letterNotFound = false;
+			}
+			
+		}
+		if (letterNotFound == true) {
+			currentGuessNumber++;
+		}
+		 }
+	
 void pauseConsole () {
     std::string temp;
     std::cout << "Enter to continue... ";
